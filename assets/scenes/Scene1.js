@@ -12,7 +12,8 @@ function Scene1(aGame, aParent) {
 	// insert pre-init code here
 
 	/* --- pre-init-end --- */
-
+	
+	//Asset Initialization.
 	this.game.add.tileSprite(0, 32, 1216, 176, 'tiles', 18, this);
 
 	var ground = this.game.add.physicsGroup(Phaser.Physics.ARCADE, this);

@@ -151,9 +151,11 @@ Level.prototype.update = function() {
 	this.physics.arcade.overlap(this.player, this.levelToggle, this.nextLevel, null, this);
 
 };
+//kill the bullet on collision.
 Level.prototype.recycleBullet = function(bullet){
 	bullet.kill();
 };
+//damage enemy when hit by bullet.
 Level.prototype.damageEnemy = function(bullet, enemy){
 	
 	bullet.kill();
@@ -164,11 +166,13 @@ Level.prototype.damageEnemy = function(bullet, enemy){
 	if(enemy.health <= 0){
 	enemy.kill();}
 };
+//heal player when health item collected.
 Level.prototype.Heal = function(player, healthRes){
 	healthRes.kill();
 	this.player.heal(21);
 	this.enemyHitPlayer();
 };
+//For now display win text but eventually call level 2 state.
 Level.prototype.nextLevel = function(){
 	this.winTxt = this.add.text(90, 90, "YOU WIN!", { font: '30px Consolas'});
 	this.winTxt.fixedToCamera = true;
@@ -177,6 +181,7 @@ Level.prototype.nextLevel = function(){
     grd.addColorStop(1, '#fff');
     this.winTxt.fill = grd;
 };
+//calculate damage to the player and update players health bar.
 Level.prototype.enemyHitPlayer = function(){
 	this.player.damage(1);
 	if(this.player.health == 60 || this.player.health == 59){
@@ -197,7 +202,7 @@ Level.prototype.enemyHitPlayer = function(){
 	console.log(this.player.health);
 	this.player.health == 0 ? this.die() : this.hurtAnimation();
 };
-
+//bleeding animation for player and enemy.
 Level.prototype.hurtAnimation = function(){
 	this.bleed.position.set(this.player.x, this.player.y);
 	this.bleed.play("bleed");
