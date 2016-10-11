@@ -30,7 +30,6 @@ Level.prototype.create = function() {
 	var scene = new Scene1(this.game);
 
 	// weapon
-
 	this.weapon = this.add.weapon(1, "items");
 	this.weapon.setBulletFrames(8, 10, true);
 	this.weapon.bulletKillType = Phaser.Weapon.KILL_CAMERA_BOUNDS;
@@ -39,27 +38,16 @@ Level.prototype.create = function() {
 	this.weapon.trackSprite(scene.fPlayer, 0, 8, true);
 
 	// player
-
 	this.player = scene.fPlayer;
 	this.camera.follow(this.player, Phaser.Camera.FOLLOW_PLATFORMER);
-	this.player.health = 60;
-	this.player.maxHealth = 60;
-	this.healthMeter = scene.healthMeter;
-	this.healthMeter.frame = 5;
-	this.healthMeter.fixedToCamera = true;
 
 	// world
-
 	this.ground = scene.fGround;
 	this.lava = scene.fLava;
-
-	this.bleed = scene.fBleed;
-	this.healthRestore = scene.healthRestore;
 	
 	this.levelToggle = scene.levelToggle;
 	
 	// enemies
-
 	this.enemies = scene.fEnemies;
 	this.enemies.forEach(function(sprite) {
 		sprite.play("walk");
@@ -89,12 +77,7 @@ Level.prototype.update = function() {
 	}
 
 	// update player velocity
-
 	this.physics.arcade.collide(this.player, this.ground);
-	this.physics.arcade.collide(this.healthRestore, this.ground);
-	this.physics.arcade.collide(this.levelToggle, this.ground);
-	
-	this.physics.arcade.collide(this.player, this.enemies, this.enemyHitPlayer, null, this);
 	
 	var vel = 0;
 
@@ -138,76 +121,14 @@ Level.prototype.update = function() {
 		this.weapon.fire();
 	}
 	
-	this.physics.arcade.overlap(this.weapon.bullets, this.ground, this.recycleBullet, null, this);
-	this.physics.arcade.overlap(this.weapon.bullets, this.enemies, this.damageEnemy, null, this);
-	
 	// update enemies
 
 	this.enemies.forEach(this.moveEnemy);
 
 	this.physics.arcade.collide(this.player, this.lava, this.die, null, this);
-	this.physics.arcade.overlap(this.player, this.healthRestore, this.Heal, null, this);
-	
-	this.physics.arcade.overlap(this.player, this.levelToggle, this.nextLevel, null, this);
 
 };
-//kill the bullet on collision.
-Level.prototype.recycleBullet = function(bullet){
-	bullet.kill();
-};
-//damage enemy when hit by bullet.
-Level.prototype.damageEnemy = function(bullet, enemy){
-	
-	bullet.kill();
-	enemy.damage(1);
-	this.bleed.position.set(enemy.x, enemy.y);
-	this.bleed.play("bleed");
-	console.log(enemy.health);
-	if(enemy.health <= 0){
-	enemy.kill();}
-};
-//heal player when health item collected.
-Level.prototype.Heal = function(player, healthRes){
-	healthRes.kill();
-	this.player.heal(21);
-	this.enemyHitPlayer();
-};
-//For now display win text but eventually call level 2 state.
-Level.prototype.nextLevel = function(){
-	this.winTxt = this.add.text(90, 90, "YOU WIN!", { font: '30px Consolas'});
-	this.winTxt.fixedToCamera = true;
-	var grd = this.winTxt.context.createLinearGradient(0, -5, -10, this.winTxt.canvas.height);
-    grd.addColorStop(0, '#009926');   
-    grd.addColorStop(1, '#fff');
-    this.winTxt.fill = grd;
-};
-//calculate damage to the player and update players health bar.
-Level.prototype.enemyHitPlayer = function(){
-	this.player.damage(1);
-	if(this.player.health == 60 || this.player.health == 59){
-	   this.healthMeter.frame = 5;
-	}else if(this.player.health < 60 && this.player.health > 50){
-	   this.healthMeter.frame = 4;
-	}else if(this.player.health < 50 && this.player.health > 40){
-		this.healthMeter.frame = 3;
-	}else if(this.player.health && this.player.health > 30){
-		this.healthMeter.frame = 2;
-	}else if(this.player.health && this.player.health > 20){
-		this.healthMeter.frame = 1;
-	}else if(this.player.health < 20 && this.player.health > 10){
-		this.healthMeter.frame = 1;
-	}else if(this.player.health < 10 && this.player.health > 0){
-		this.healthMeter.frame = 0;
-	}
-	console.log(this.player.health);
-	this.player.health == 0 ? this.die() : this.hurtAnimation();
-};
-//bleeding animation for player and enemy.
-Level.prototype.hurtAnimation = function(){
-	this.bleed.position.set(this.player.x, this.player.y);
-	this.bleed.play("bleed");
-	
-};
+
 
 Level.prototype.moveEnemy = function(sprite) {
 
