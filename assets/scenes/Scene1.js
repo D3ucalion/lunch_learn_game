@@ -229,6 +229,16 @@ function Scene1(aGame, aParent) {
 		 left: 570,
 		 right: 880
 		};
+		
+	var enemies0 = this.game.add.sprite(900, 115, 'enemies', 0, enemies);
+	enemies0.anchor.setTo(0.5, 0.0);
+	enemies0.animations.add('walk', [8, 9, 10], 7, true);
+	this.game.physics.arcade.enable(enemies0);
+	enemies0.body.velocity.x = 60.0;
+	enemies0.data = {
+		 left: 870,
+		 right: 970
+		};	
 
 	var healthRestore = this.game.add.sprite(880, 130, 'items', 13, this);
 	var levelToggle = this.game.add.sprite(1200, 50, 'items', 3, this);
